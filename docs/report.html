@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ET617 Report · 24B3929 · Mission Marathi: Aksharveer!</title>
+<style>
+  @page { size: A4; margin: 14mm 15mm 14mm 15mm; }
+  :root { --o:#ff7a00; --p:#5b3fd6; --g:#1f9d63; --ink:#1f1b2e; --mute:#5d5872; --line:#e6e2f2; --soft:#f7f5ff; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", "Nirmala UI", "Noto Sans Devanagari", sans-serif; color: var(--ink); font-size: 10pt; line-height: 1.42; margin: 0; }
+  .mr { font-family: "Nirmala UI", "Noto Sans Devanagari", sans-serif; }
+  .cover { background: linear-gradient(120deg, #ff8a00, #ff5d8f 55%, #7b5cff); color: #fff; border-radius: 14px; padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .cover h1 { margin: 0; font-size: 24pt; line-height: 1.15; }
+  .cover .en { font-size: 12pt; opacity: .95; margin-top: 2px; }
+  .cover .meta { font-size: 9.5pt; margin-top: 8px; opacity: .95; }
+  .cover .meta a { color: #fff; }
+  .badge { background: rgba(255,255,255,.2); border: 1.5px solid rgba(255,255,255,.7); border-radius: 12px; padding: 8px 14px; text-align: center; min-width: 120px; }
+  .badge b { display: block; font-size: 16pt; letter-spacing: 1px; }
+  h2 { font-size: 13pt; margin: 14px 0 6px; color: var(--p); display: flex; align-items: center; gap: 8px; page-break-after: avoid; }
+  h2 .tag { background: var(--p); color: #fff; border-radius: 6px; padding: 1px 8px; font-size: 10pt; }
+  h3 { font-size: 11pt; margin: 10px 0 4px; color: var(--ink); page-break-after: avoid; }
+  p { margin: 4px 0 6px; }
+  ul { margin: 4px 0 6px; padding-left: 18px; } li { margin: 2px 0; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .box { background: var(--soft); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; page-break-inside: avoid; }
+  .box.o { background: #fff6ec; border-color: #ffd9b0; } .box.g { background: #eefaf3; border-color: #bfe8d1; } .box.r { background: #fff0f4; border-color: #ffc9d6; }
+  .box h4 { margin: 0 0 3px; font-size: 10.2pt; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.1pt; margin: 6px 0; page-break-inside: avoid; }
+  th { background: var(--p); color: #fff; text-align: left; padding: 5px 7px; font-weight: 600; }
+  td { padding: 4px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:nth-child(even) td { background: #faf9fe; }
+  .kv td:first-child { width: 26%; font-weight: 600; color: var(--mute); }
+  figure { margin: 0; text-align: center; page-break-inside: avoid; }
+  figure img { width: 100%; height: 168px; object-fit: contain; background: #f2f0fa; border-radius: 8px; border: 1px solid var(--line); }
+  figure.wide img { height: 150px; }
+  figcaption { font-size: 8.6pt; color: var(--mute); margin-top: 3px; line-height: 1.3; }
+  .pill { display: inline-block; border-radius: 10px; padding: 0 7px; font-size: 8.8pt; font-weight: 600; background: #ece8ff; color: var(--p); }
+  .pill.g { background: #d8f5e5; color: #137a4a; } .pill.r { background: #ffdbe4; color: #b4234f; } .pill.y { background: #fff0c2; color: #8a6200; }
+  .flow { display: flex; align-items: stretch; gap: 6px; font-size: 9.2pt; margin: 6px 0; }
+  .flow div { flex: 1; background: #fff; border: 1.5px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+  .flow div b { color: var(--p); display: block; }
+  .note { color: var(--mute); font-size: 9pt; font-style: italic; }
+  .pb { page-break-before: always; }
+  code { background: #f1eff8; border-radius: 4px; padding: 0 4px; font-size: 9pt; }
+  .foot { text-align: center; color: var(--mute); font-size: 8.5pt; margin-top: 16px; border-top: 1px solid var(--line); padding-top: 6px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div>
+    <h1 class="mr">मिशन मराठी — अक्षरवीर!</h1>
+    <div class="en">Mission Marathi: Aksharveer! · a voice-guided Marathi barakhadi game for Hindi-speaking early readers</div>
+    <div class="meta">ET 617 End-Semester Examination · 18 Nov 2026<br>
+      App: <a href="https://et617-24b3929.vercel.app">et617-24b3929.vercel.app</a> · Repo: <a href="https://github.com/vedikaborse/et617-endsem-24B3929">github.com/vedikaborse/et617-endsem-24B3929</a></div>
+  </div>
+  <div class="badge">Identity token<b>24B3929</b>Vedikaborse</div>
+</div>
+
+<h2><span class="tag">ID</span> Identity card</h2>
+<table class="kv">
+  <tr><td>P · Problem</td><td><b>P2</b> Contextual language and literacy application (NLP)</td></tr>
+  <tr><td>T · Topic</td><td><b>P2-T1</b> Marathi: barakhadi / matra recognition for early readers</td></tr>
+  <tr><td>L · Learner context</td><td><b>L2</b> First-generation learner, low-income settlement, NGO after-school centre with shared tablets</td></tr>
+  <tr><td>C · Constraint</td><td><b>C2</b> Learner's own language: Hindi, delivered as speech</td></tr>
+  <tr><td>Identity token</td><td><b>24B3929</b>, shown in the footer of every screen (<code>ET617 · 24B3929</code>) and on the About screen</td></tr>
+</table>
+
+<h2><span class="tag">D1</span> Educational problem</h2>
+<p>Children of Hindi-speaking migrant families in Niphad (Nashik) attend Marathi-medium schools but hear only Hindi at home. By Grade 3 many still cannot recognise Marathi letters. They confuse look-alikes (<span class="mr">घ/ध, भ/म, ब/व</span>) and do not notice that a matra changes the sound (<span class="mr">क → का → कि</span>). Classroom explanations in Marathi do not reach them, and being corrected in public makes them stop trying. Their NGO centre has shared tablets but no tool that teaches Marathi letters through the language they understand, spoken Hindi, and listens to them read without punishing their accent.</p>
+<div class="grid2" style="grid-template-columns: 2fr 1fr;">
+  <div class="box">
+    <h4>Learning outcomes (measured in-app)</h4>
+    <ol style="margin:0; padding-left:18px;">
+      <li><b>Identify</b> a Marathi letter from its sound among 3–4 options that include a look-alike: ≥ 80 % over 10 items.</li>
+      <li><b>Distinguish</b> barakhadi forms (<span class="mr">कि / की / के / का</span>) and <b>place</b> the right matra: ≥ 75 % over 8 items.</li>
+      <li><b>Associate</b> a letter with a picture-word (<span class="mr">क–कमळ</span>): ≥ 4/5, and <b>read aloud</b> 3 of 5 words accepted by the speech check.</li>
+    </ol>
+  </div>
+  <div class="box o">
+    <h4>Context of use</h4>
+    NGO after-school centre, 4–6 pm. A 15-minute turn on a shared Android tablet in Chrome. Weak or no internet at times.
+  </div>
+</div>
+
+<h2><span class="tag">D2</span> Learner persona</h2>
+<div class="grid2">
+  <div class="box">
+    <h4>Arjun Prajapati · 8 years · Grade 3 · Niphad</h4>
+    <ul style="margin:0">
+      <li><b>Background (L2):</b> first in his family at school. His parents migrated from UP and work at the Lasalgaon onion market and in vineyards.</li>
+      <li><b>Language:</b> Hindi at home, Marathi at school. <b>Cannot read Marathi or Hindi.</b> Says <span class="mr">कमल</span> for <span class="mr">कमळ</span>.</li>
+      <li><b>Prior knowledge:</b> knows about 8 letter shapes. Has no barakhadi. Treats <span class="mr">का</span> as <span class="mr">क</span>.</li>
+      <li><b>Device / time:</b> shared tablet, 15 min × 4 days a week. No login.</li>
+      <li><b>Motivation:</b> cartoons, superheroes, stars. Wants to read his sister's storybook.</li>
+      <li><b>Strengths / challenges:</b> good listener and picture memory / shy about mistakes, short attention span.</li>
+    </ul>
+  </div>
+  <div>
+    <div class="box r" style="margin-bottom:8px"><h4>M1 · Look-alike letters are "the same"</h4>He reads the overall shape and misses the distinguishing stroke: <span class="mr">भ→म, घ→ध, ब→व, प→ष</span>.</div>
+    <div class="box r"><h4>M2 · "The matra doesn't change the sound"</h4>He ignores the matra (<span class="mr">का</span> read as <span class="mr">क</span>) or mixes up <span class="mr">ि</span> and <span class="mr">ी</span>, thinking the left-written <span class="mr">ि</span> is spoken first.</div>
+  </div>
+</div>
+
+<h2><span class="tag">D3</span> Educational content</h2>
+<p><b>Concept (spoken by the hero):</b> <span class="mr">"हर अक्षर की अपनी आवाज़ है — क, जैसे कमळ।" · "भ और म एक जैसे दिखते हैं, पर भ में बाईं तरफ़ छोटी पूँछ है।" · "मात्रा लगाने से आवाज़ बदलती है: क + ा = का।"</span></p>
+<table>
+  <tr><th>#</th><th>Format</th><th>Task</th><th>Answer</th><th>Feedback (spoken)</th></tr>
+  <tr><td>1</td><td>Picture → letter</td><td>🫓 <span class="mr">भाकरी</span>: choose from <span class="mr">भ म ब क</span></td><td class="mr">भ</td><td><span class="pill g">✓</span> <span class="mr">"वाह, एकदम सही!"</span> ⭐ · <span class="pill r">M1</span> chose <span class="mr">म</span>: <span class="mr">"भ में बाईं तरफ़ छोटी पूँछ है; म में नहीं"</span>, then retry</td></tr>
+  <tr><td>2</td><td>Picture → letter</td><td>🏠 <span class="mr">घर</span>: <span class="mr">घ ध प स</span></td><td class="mr">घ</td><td><span class="pill r">M1</span> chose <span class="mr">ध</span>: <span class="mr">"घ के ऊपर लकीर पूरी जुड़ी है"</span></td></tr>
+  <tr><td>3</td><td>Sound → syllable</td><td>hear <span class="mr">कि</span>: <span class="mr">कि की का के</span></td><td class="mr">कि</td><td><span class="pill y">M2</span> chose <span class="mr">की</span>: <span class="mr">"अक्षर सही है, बस मात्रा बदलो"</span>, and <span class="mr">कि</span> is replayed</td></tr>
+  <tr><td>4</td><td>Picture → letter</td><td>🐟 <span class="mr">मासा</span>: <span class="mr">म भ स न</span></td><td class="mr">म</td><td>A repeated <span class="mr">भ/म</span> mix-up opens a side-by-side <b>comparison card</b></td></tr>
+  <tr><td>5</td><td>Drag matra</td><td>🦚 <span class="mr">म ▢ र</span>: drag <span class="mr">ो / ा / ौ</span></td><td class="mr">मोर</td><td><span class="pill y">M2</span> placed <span class="mr">ा</span>: <span class="mr">"ये बना मा… शब्द फिर सुनो"</span></td></tr>
+  <tr><td>6</td><td>Matching</td><td>tap letter → picture (<span class="mr">क</span>–🪷, <span class="mr">ग</span>–🐄, <span class="mr">स</span>–🐇)</td><td>pairs</td><td>A wrong pair names the picture and replays its first sound</td></tr>
+  <tr><td>7</td><td>Read aloud</td><td>🪷 say <span class="mr">कमळ</span></td><td class="mr">कमळ / कमल</td><td><span class="pill g">variation</span> <span class="mr">"शाबाश! ऐसे भी बोलते हैं — कमळ"</span></td></tr>
+</table>
+<p><b>Scaffolding:</b> 1st error → a targeted hint, with the answer not shown · 2nd error → the right option glows · repeated pattern → an adaptation rule (D6).</p>
+
+<h2><span class="tag">D4</span> Working application</h2>
+<p><b>URL:</b> <a href="https://et617-24b3929.vercel.app">https://et617-24b3929.vercel.app</a>. A static React + Vite site on Vercel, with no backend and no API keys.</p>
+<div class="flow">
+  <div><b>Home</b>The hero flies in and speaks; ▶</div>
+  <div><b>Map</b>10 zones, all unlocked</div>
+  <div><b>Learn</b>Letter explorer · Barakhadi village</div>
+  <div><b>Play</b>8 games (below)</div>
+  <div><b>Reward</b>Stars, today's best 📅🏆, all-time best 👑</div>
+  <div><b>Teacher</b>Scenarios, logs, reset</div>
+</div>
+<p><b>Games:</b> 1 Listen &amp; identify · 2 Picture → letter (+ matra mode) · 3 Find the twin (look-alikes) · 4 Letter–picture match · 5 Barakhadi builder · 6 Drag the matra (touch drag or tap-tap) · 7 Letter maze · 8 Read aloud (speech recognition).</p>
+<div class="box g">
+  <h4>C2 made visible: speech instead of text</h4>
+  Arjun cannot read Hindi either, so <b>his language is delivered as speech</b>. The hero <span class="mr">अक्षरवीर</span> flies in on every screen and says the instruction in simple Hindi (<span class="mr">"नमस्ते! मैं अक्षरवीर! चलो, मराठी सीखने चलें?"</span>). An animated 👆 hand shows the tap or drag. Child screens contain only icons and the Marathi being learned. A wrong answer makes a coconut 🥥 bonk the <i>hero</i> (never the child), followed at once by a spoken hint. Each zone has a light animated scene: jungle, mountain, village, river, cave and others.
+</div>
+<div class="grid4" style="margin-top:8px">
+  <figure><img src="screenshots/08-v2-home-demo-hand.jpg"><figcaption>Home: demo hand on ▶</figcaption></figure>
+  <figure><img src="screenshots/02-map.jpg"><figcaption>Map: every zone open</figcaption></figure>
+  <figure><img src="screenshots/09-v2-letter-jungle-hero-guide.jpg"><figcaption>Letter explorer in the jungle, with the flying hero guide</figcaption></figure>
+  <figure><img src="screenshots/11-v3-reward-high-score.jpg"><figcaption>Reward with session and all-time high scores</figcaption></figure>
+</div>
+<p class="note">Progress is stored only in the tablet's localStorage, with no names and no server. It feeds the adaptation, the speech judge's visual evidence, the D8 logs and high scores. "Reset learner" clears it for the next child.</p>
+
+<h2><span class="tag">D5</span> Two contrasting learner scenarios (live app)</h2>
+<div class="grid2">
+  <div class="box g"><h4>A · Correct learner</h4>Taps <span class="mr">भ</span> for 🫓 → praise and ⭐. After 3 correct answers <span class="pill">R1 LEVEL_UP</span>: 4 options with a look-alike distractor.</div>
+  <div class="box r"><h4>B · Misconception M1</h4>Taps <span class="mr">म</span> for 🫓 → the hint names the distinguishing stroke and the answer is <b>not</b> revealed. A repeated mix-up → <span class="pill r">R3 COMPARE</span> card.</div>
+</div>
+<div class="grid4" style="margin-top:8px">
+  <figure><img src="screenshots/03-scenarioA-correct.jpg"><figcaption>A: correct, star awarded</figcaption></figure>
+  <figure><img src="screenshots/04-scenarioB-misconception.jpg"><figcaption>B: <span class="mr">म</span> chosen, targeted hint</figcaption></figure>
+  <figure><img src="screenshots/10-v2-compare-card.jpg"><figcaption>B: <span class="mr">भ ≠ म</span> comparison card</figcaption></figure>
+  <figure><img src="screenshots/07-teacher.jpg"><figcaption>Teacher panel: one-tap scenarios</figcaption></figure>
+</div>
+<h3>C · P2 challenge: pronunciation variation vs learning error</h3>
+<div class="grid2" style="grid-template-columns: 1fr 1fr 1.1fr;">
+  <figure class="wide"><img src="screenshots/05-scenarioC-variation.jpg"><figcaption><span class="mr">कमळ</span> heard as "<span class="mr">कमल</span>" → <span class="pill g">VARIATION_ACCEPTED</span></figcaption></figure>
+  <figure class="wide"><img src="screenshots/06-scenarioC-learning-error.jpg"><figcaption><span class="mr">भ</span> heard as "<span class="mr">म</span>" + 2 visual mix-ups → <span class="pill r">LIKELY_LEARNING_ERROR</span></figcaption></figure>
+  <div class="box" style="font-size:9.3pt">Without visual evidence the same "<span class="mr">म</span>" gives <span class="pill y">POSSIBLE_ERROR</span>, and the child taps the letter to confirm. Low confidence gives <span class="pill y">UNCERTAIN</span> and is never marked wrong.</div>
+</div>
+<p class="note">Some screenshots were captured before the voice-first redesign and still show on-screen Hindi text. The flow and decisions are the same.</p>
+
+<h2><span class="tag">D6</span> AI functionality specification</h2>
+<table>
+  <tr><th style="width:18%"></th><th>Speech recognition + judge (NLP) · <code>src/lib/speech.js</code></th></tr>
+  <tr><td><b>What it does</b></td><td>Transcribes the child reading a word or syllable aloud and decides whether this is a learning error or acceptable variation.</td></tr>
+  <tr><td><b>Model call</b></td><td><code>rec = new webkitSpeechRecognition(); rec.lang = 'mr-IN'; rec.maxAlternatives = 5; rec.start()</code>, retried with <code>'hi-IN'</code>. This is the browser's cloud recogniser: no backend, no key.</td></tr>
+  <tr><td><b>Input → output</b></td><td>About 7 s of mic audio → up to 5 <code>{transcript, confidence}</code> in Devanagari.</td></tr>
+  <tr><td><b>Checked before the child sees it</b></td><td>Rule-based <code>judge()</code>:
+    ① exact match <span class="pill g">CORRECT</span> → ② match after variation rules (<span class="mr">ळ→ल, ि/ी, ु/ू, ण→न, श→स</span>) <span class="pill g">VARIATION_ACCEPTED</span> → ③ confidence &lt; 0.45 <span class="pill y">UNCERTAIN</span> → ④ a look-alike was heard: with ≥ 2 matching visual tap errors <span class="pill r">LIKELY_LEARNING_ERROR</span>, otherwise <span class="pill y">POSSIBLE_ERROR</span> plus a tap check → ⑤ <span class="pill y">TRY_AGAIN</span>. The child hears only a short Hindi line. The full trace is shown in the Teacher panel.</td></tr>
+  <tr><td><b>If it is wrong</b></td><td>A recogniser mistake can only lead to "uncertain / try again / tap check". It never marks the child wrong. An error is concluded only when the visual tasks agree.</td></tr>
+  <tr><td><b>If it fails</b></td><td>No support, offline or mic denied → "no-mic mode · no AI check" (listen → say → 👍). Teacher demos inject recorded samples into the same <code>judge()</code>, labelled <b>DEMO</b>.</td></tr>
+</table>
+<div class="grid2">
+  <div class="box"><h4>Speech synthesis · <code>audio.js</code></h4>Uses an mr-IN voice if the device has one, else a hi-IN voice. With neither, the screen still works with visual cues. A 6 s timeout means a game never waits on audio.</div>
+  <div class="box"><h4>Adaptive rules · <code>model.js</code></h4><span class="pill">R1</span> 3 correct → level up · <span class="pill">R2</span> 2 wrong → 2 options + picture hint · <span class="pill">R3</span> same look-alike ×2 → compare card · <span class="pill">R4</span> matra error ×2 → barakhadi review · <span class="pill">R5</span> ≥ 3 hints → known letters only. Every firing is logged.</div>
+</div>
+
+<h2><span class="tag">D7</span> Pedagogical rationale</h2>
+<div class="grid2">
+  <div>
+    <h3>How the design supports learning</h3>
+    <ul>
+      <li><b>Hear → see → do:</b> each letter is spoken, shown large and tied to a familiar rural picture (<span class="mr">कांदा, ऊस, भाकरी, गाय</span>), then practised in a game.</li>
+      <li><b>Discrimination is taught, not just tested:</b> stroke-level hints, the comparison card, the twin game and the maze target M1.</li>
+      <li><b>Matras as a pattern:</b> the barakhadi builder and drag-the-matra show consonant + matra = syllable, including the <span class="mr">ि</span> rule (written left, spoken after), which targets M2.</li>
+      <li><b>Free exploration:</b> every zone is open, and repetition is a replay away.</li>
+    </ul>
+  </div>
+  <div>
+    <h3>Feedback, constraint and context</h3>
+    <ul>
+      <li><b>No shame:</b> a short private turn, no lives, the coconut hits the mascot, and the hint comes straight after.</li>
+      <li><b>Adaptive:</b> rules R1–R5 respond to performance and hint use.</li>
+      <li><b>C2:</b> the persona cannot read, so Hindi is <i>spoken</i>. Marathi is the content and Hindi is the guide. Both use Devanagari, so the shapes he already knows transfer.</li>
+      <li><b>L2:</b> shared tablets mean no login, local data and one-tap reset. A first-generation learner gets no help at home, so the app is self-explaining. A small bundle (~70 KB) works on weak internet.</li>
+    </ul>
+  </div>
+</div>
+<div class="box o">
+  <h4>P2 design challenge: telling errors from dialect or pronunciation variation</h4>
+  Speech alone never proves a literacy error. Known Hindi-speaker substitutions (<span class="mr">ळ→ल</span>, vowel length, <span class="mr">ण→न, श→स</span>) are accepted as <b>variation</b>: <span class="mr">कमळ</span> said as "<span class="mr">कमल</span>" earns praise and a model of <span class="mr">ळ</span>. Low confidence counts as <b>recogniser uncertainty</b>. A <b>learning error</b> requires two sources of evidence to agree: the child says "<span class="mr">म</span>" for <span class="mr">भ</span> <i>and</i> has picked <span class="mr">म</span> for <span class="mr">भ</span> in tap games. If only speech disagrees, the child taps the letter to self-correct. <span class="note">Limit: the variation rules are conventional patterns, not a validated dialect model.</span>
+</div>
+
+<h2><span class="tag">D8</span> Evaluation plan <span class="pill y">planned, not yet run</span></h2>
+<table>
+  <tr><th>Outcome</th><th>Assessment</th><th>Data logged (anonymous, on device)</th><th>Success</th></tr>
+  <tr><td>LO1 Identify</td><td>10-item sound → letter test with look-alikes, pre and post</td><td>accuracy, chosen distractor, response time, attempts</td><td>≥ 80 %; look-alike errors halved</td></tr>
+  <tr><td>LO2 Matras</td><td>4 matra-choice + 4 drag-the-matra items</td><td>matra errors per consonant, hints</td><td>≥ 75 %; ≤ 1 <span class="mr">ि/ी</span> mix-up</td></tr>
+  <tr><td>LO3 Associate / read</td><td>5 picture matches + 5 read-aloud words</td><td>matches, speech decisions and transcripts</td><td>≥ 4/5 matches; ≥ 3/5 words accepted</td></tr>
+</table>
+<p><b>Design:</b> about 15 children; pre-test → 2 weeks (4 × 15 min a week) → post-test → retention test 1 week later, plus a facilitator's confidence rubric. <b>Success:</b> ≥ 70 % of children meet all three thresholds and keep ≥ 80 % of their gain at retention.</p>
+
+<h2><span class="tag">AI</span> AI-use log and reflection</h2>
+<p><b>Tool:</b> Claude Code (Anthropic), a single session on 18 Nov 2026 from about 19:00 IST. The chat export is attached on Moodle.</p>
+<table>
+  <tr><th style="width:22%">Stage</th><th>What the AI did · what I decided</th></tr>
+  <tr><td>Planning</td><td>Drafted DESIGN.md from my card, persona notes and the exam PDF.</td></tr>
+  <tr><td>Content</td><td>Proposed the word list, look-alike pairs and Hindi lines. I kept conventional Marathi chart words and invented none.</td></tr>
+  <tr><td>Code &amp; UI</td><td>Wrote the React app, speech judge, adaptation rules and the original SVG hero, then deployed to Vercel.</td></tr>
+  <tr><td>My iterations</td><td>① Arjun can't read Hindi either → voice guide, demo hand, no text, animated scenes. ② Coconut-bonk reaction and session high scores. ③ I chose an original hero over a copyrighted cartoon.</td></tr>
+  <tr><td>Testing</td><td>Ran scenarios A, B and C on the live URL. Fixed the look-alike counter so the compare rule fires correctly.</td></tr>
+</table>
+<p><b>Reflection:</b> AI made an 8-game build possible in two hours, but its output had to be checked against my card (no reading required, C2 as speech) and for linguistic accuracy. I describe the NLP honestly: it is the browser's recogniser plus my own rules, with a labelled fallback, and demo samples are always marked. <b>Not done:</b> testing with children, and checking the mic and Marathi voice on a real tablet.</p>
+
+<div class="foot">ET617 · 24B3929 · Mission Marathi: Aksharveer! · Vedikaborse</div>
+</body>
+</html>
