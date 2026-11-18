@@ -3,6 +3,7 @@
 import { pairInfo, MATRAS } from '../data/marathi.js';
 
 const KEY = 'aksharveer_v1';
+const pk = (a, b) => [a, b].sort().join('/'); // symmetric look-alike pair key
 
 export const fresh = () => ({
   stars: 0,
@@ -84,11 +85,11 @@ export function recordAnswer({ game, target, chosen, correct, ms = 0, attempt = 
   } else {
     state.wrongStreak += 1; state.streak = 0;
     if (kind === 'lookalike') {
-      const k = `${splitSyl(target)[0]}>${splitSyl(chosen)[0]}`;
+      const k = pk(splitSyl(target)[0], splitSyl(chosen)[0]);
       state.confusions[k] = (state.confusions[k] || 0) + 1;
       if (state.confusions[k] >= 2) {
         outcome = 'COMPARE';
-        events.push(adaptEvent('R3: same look-alike confusion ≥ 2 (M1)', 'COMPARE', `${k.replace('>', ' confused with ')} ×${state.confusions[k]} → side-by-side comparison card`));
+        events.push(adaptEvent('R3: same look-alike confusion ≥ 2 (M1)', 'COMPARE', `${k} confused ×${state.confusions[k]} → side-by-side comparison card`));
       }
     }
     if (kind === 'matra') {
@@ -132,7 +133,7 @@ export function logSpeech(entry) { state.speech.push({ t: Date.now(), ...entry }
 
 // Visual evidence for the P2 challenge: how often did the learner pick `wrong` when the target was `target` in tap games?
 export function visualConfusion(target, wrong) {
-  return state.confusions[`${target}>${wrong}`] || 0;
+  return state.confusions[pk(target, wrong)] || 0;
 }
 export function visualCorrect(target) {
   return (state.letters[target] && state.letters[target].correct) || 0;
@@ -140,7 +141,7 @@ export function visualCorrect(target) {
 
 // Seed model for demo scenarios (teacher panel).
 export function seedConfusion(target, wrong, n = 2) {
-  state.confusions[`${target}>${wrong}`] = n;
+  state.confusions[pk(target, wrong)] = n;
   for (let i = 0; i < n; i++) state.log.push({ t: Date.now(), game: 'demo-seed', target, chosen: wrong, correct: false, kind: 'lookalike', ms: 0, attempt: 1, level: state.level });
   save();
 }
