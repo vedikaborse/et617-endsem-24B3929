@@ -13,6 +13,9 @@
 ## Architecture (one minute)
 React 18 + Vite, static, on Vercel. Hash routing (`src/main.jsx`). One dataset `src/data/marathi.js` (vowels, consonants, matras, generated barakhadi, words, look-alike pairs). `src/lib/audio.js` = TTS + WebAudio beeps. `src/lib/speech.js` = speech recognition + `judge()`. `src/lib/model.js` = localStorage learner model + adaptation rules R1–R5. Screens in `src/screens/`. No backend, no API keys.
 
+## Why is there almost no text?
+The persona cannot read Marathi or Hindi. So C2 (learner's own language) is delivered as *spoken* Hindi: the flying hero says every instruction, the demo hand shows the action, and feedback is the hero's reaction plus voice. On-screen writing is only the Marathi being learned.
+
 ## Likely questions
 1. **Why Hindi instructions for a Marathi app?** C2 says the learner's own language. Arjun speaks Hindi at home and cannot follow Marathi instructions, so the task explanation must be in Hindi or he learns nothing. Marathi is the content, Hindi the scaffold, and both share the Devanagari script.
 2. **How is C2 visible?** Every child-facing instruction, hint, feedback and reward is short spoken Hindi, and it is also spoken aloud. English appears only on the About and Teacher screens.

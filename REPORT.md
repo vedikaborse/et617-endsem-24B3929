@@ -80,6 +80,16 @@ Every screen has a 🏠 home button, a 🔁 repeat-audio button, a 🔊/🔇 mut
 
 Screens: ![home](docs/screenshots/01-home.jpg) ![map](docs/screenshots/02-map.jpg)
 
+
+### Design iteration 2: voice and visuals instead of text
+Feedback from reviewing the persona: Arjun cannot read Marathi, **and he cannot read Hindi either**. So written Hindi on screen does not help him. Only *spoken* Hindi does. The child screens were redesigned:
+- **Flying voice guide:** the hero अक्षरवीर (redrawn original cartoon: spiky hair, orange mask, flapping saffron cape, star suit) flies in on every screen and *says* the instruction in simple Hindi, e.g. "नमस्ते! मैं अक्षरवीर! चलो, मराठी सीखने चलें? हरा बटन दबाओ!". A sound-wave bubble shows when he is talking. Tapping him repeats the line.
+- **Demo hand 👆:** an animated hand shows *how* to play. It taps the play button, taps a letter, sweeps over the answer options, drags a matra chip into the slot, steps in the maze and presses the mic. It replays with 🔁.
+- **No instruction text on child screens:** titles, buttons and feedback are icons only (▶ ➡️ 🔁 👍 🌟 🤔). Feedback is the hero's reaction (jumps for correct, tilts head for "think again") plus spoken Hindi. The only writing left is the Marathi learning content itself.
+- **Animated themed worlds (CSS + emoji, about 0 KB of extra assets):** व्यंजन जंगल has swaying palms, a swinging monkey, butterflies and a walking elephant. स्वर पर्वत has peaks, eagles and snow. बाराखड़ी गाँव has huts, a cow, a rooster and chimney smoke. मात्रा मैदान has kites and sunflowers. सुनो-पहचानो has a river with jumping fish. The quiz games have a fair with balloons. The maze has a treasure island. Speech has a glowing crystal cave.
+
+![v2 home](docs/screenshots/08-v2-home-demo-hand.jpg) ![v2 letter](docs/screenshots/09-v2-letter-jungle-hero-guide.jpg) ![v2 compare](docs/screenshots/10-v2-compare-card.jpg)
+
 ## D5 — Two contrasting learner scenarios (run on the live app)
 
 Started from the Teacher panel ("Run Scenario A/B"), which resets the learner and opens Game 2 with the scripted items from D3.
@@ -161,5 +171,6 @@ Also collected: hint usage, number of rounds completed, adaptation rules fired, 
 - **Content generation:** Claude proposed the Marathi word list, look-alike pairs, matra names and Hindi feedback text. I reviewed it for the card. Words were chosen from conventional Marathi alphabet-chart examples (कमळ, घर, ससा, हत्ती…). Where no common initial word exists (ङ, ञ, ण, ळ), none was invented.
 - **Coding:** Claude wrote the React/Vite code, the speech judge, the adaptation engine and the CSS, then built, committed and deployed to Vercel through the CLI.
 - **UI design:** Claude designed the original SVG mascot (अक्षरवीर) and the parrot (मिठू), the map and the colour system.
+- **Iteration after review:** I pointed out that a non-reader of Marathi also cannot read Hindi. I asked for voice-plus-visual instructions, a flying hero, a demo hand and animated zone backgrounds. Claude implemented this as design iteration 2. A licensed cartoon character such as Chhota Bheem was not used, for copyright and exam-integrity reasons; the hero was redrawn instead.
 - **Debugging and testing:** Claude tested on the live URL in a browser pane (Scenario A, B, C screenshots). It found that look-alike confusions were counted in one direction only, so the COMPARE rule fired late, and made the counting symmetric.
 - **Reflection:** AI made a 2-hour build of 8 games possible, but its output needed checking against the card (C2: no English on child screens) and against linguistic accuracy. The variation rules are presented as conventional patterns, not as research findings. The speech feature is described honestly: it depends on the browser's cloud recogniser, has a labelled non-AI fallback, and sample outcomes are always marked DEMO. Not done: no real-child testing, and the Marathi TTS quality depends on the device's voices.

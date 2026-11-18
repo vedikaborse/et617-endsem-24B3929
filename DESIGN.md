@@ -126,3 +126,6 @@ Pre/post 10-item letter test and 8-item matra test built from the in-app games; 
 - Web Speech API (SpeechSynthesis + SpeechRecognition), localStorage learner model.
 - Hash routing (deep links for teacher demo), no backend, no API keys.
 - Deployed on Vercel as a static site.
+
+## 13. Iteration 2 (after review): voice + visuals, no reading
+The child cannot read Hindi either, so C2 is met through **spoken** Hindi. A flying hero guide speaks every instruction, an animated demo hand shows tap/drag actions, child screens carry icons and Marathi content only, and every zone has a light animated themed scene (jungle, mountain, village, field, river, fair, treasure island, cave).
