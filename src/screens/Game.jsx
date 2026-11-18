@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { TopBar, nav, Feedback, PRAISE, TRYAGAIN, pickOne, shuffle } from '../components/ui.jsx';
+import { TopBar, nav, Feedback, PRAISE, TRYAGAIN, pickOne, shuffle, heroSay, DemoHand } from '../components/ui.jsx';
 import { CONSONANTS, WORDS, MATRAS, lookalikeOf, pairInfo, BARAKHADI_CORE } from '../data/marathi.js';
 import { speak, beep } from '../lib/audio.js';
 import { recordAnswer, questionConfig, addStars, markGame, splitSyl, knownLetters, noteHint } from '../lib/model.js';
 
 const ROUND = 6;
-const TITLES = { g1: '👂 सुनो और पहचानो', g2: '🎯 सही अक्षर चुनो', g3: '🔍 जुड़वाँ अक्षर खोजो' };
+const TITLES = { g1: '👂', g2: '🎯', g3: '🔍' };
 const CORE = ['क', 'ग', 'घ', 'ध', 'भ', 'म', 'ब', 'व', 'प', 'ष', 'थ', 'य', 'स', 'न', 'ट', 'ठ', 'ड', 'ढ', 'च', 'ह'];
 
 // Fixed scripted items for live viva demos (teacher panel): A = correct learner, B = M1 misconception
@@ -53,12 +53,15 @@ export default function Game({ game, query }) {
   const [overlay, setOverlay] = useState(null);
   const t0 = useRef(Date.now());
   const easier = useRef(false);
+  const [handRun, setHandRun] = useState(0);
+  useEffect(() => { const t = setTimeout(() => setHandRun(1), 300); return () => clearTimeout(t); }, []);
+  const handSteps = () => [{ sel: '.speakbig', act: 'tap' }, { sel: '.opt:nth-child(1)', act: 'hover' }, { sel: '.opt:nth-child(2)', act: 'hover' }, { sel: '.opt:nth-child(3)', act: 'hover' }];
 
   const promptSay = (qq = q) => {
     if (!qq) return;
-    if (game === 'g1' || qq.matra) return speak(qq.matra ? 'सुनो, और सही अक्षर पर टैप करो!' : 'आवाज़ सुनो! कौन-सा अक्षर है?', 'hi').then(() => speak(qq.target, 'mr'));
-    if (game === 'g2') return speak('ये क्या है? ये किस अक्षर से शुरू होता है?', 'hi').then(() => speak(qq.prompt, 'mr'));
-    return speak('बड़े अक्षर जैसा, बिल्कुल वैसा ही अक्षर खोजो!', 'hi');
+    if (game === 'g1' || qq.matra) return heroSay(qq.matra ? 'सुनो, और सही अक्षर दबाओ!' : 'आवाज़ सुनो! कौन-सा अक्षर है? उसे दबाओ।').then(() => speak(qq.target, 'mr'));
+    if (game === 'g2') return heroSay('ये क्या है? ये किस अक्षर से शुरू होता है? उसे दबाओ।').then(() => speak(qq.prompt, 'mr'));
+    return heroSay('बड़े अक्षर जैसा, बिल्कुल वैसा ही अक्षर नीचे ढूँढो!');
   };
 
   const next = (idx, prevTarget) => {
@@ -85,10 +88,10 @@ export default function Game({ game, query }) {
     if (correct) {
       beep('ok'); addStars(state.attempt === 1 ? 1 : 0);
       const msg = pickOne(PRAISE);
-      speak(msg);
+      heroSay(msg);
       setState({ ...state, solved: true, fb: { kind: 'good', text: msg + (state.attempt === 1 ? ' ⭐ +1' : '') } });
       setResults((r) => [...r, state.attempt === 1]);
-      if (outcome === 'LEVEL_UP') { setBanner('🚀 लेवल ऊपर! अब और चुनौती!'); speak('वाह! अब थोड़ा मुश्किल खेल!'); }
+      if (outcome === 'LEVEL_UP') { setBanner('🚀 ⬆️'); heroSay('वाह! तुम लेवल ऊपर गए! अब थोड़ा मुश्किल खेल!'); }
       return;
     }
     beep('bad');
@@ -97,25 +100,25 @@ export default function Game({ game, query }) {
     const [tc] = splitSyl(q.target); const [cc] = splitSyl(o);
     if (kind === 'lookalike') {
       const p = pairInfo(tc, cc);
-      text = <>ये <span className="mr" lang="mr">{o}</span> है — <span className="mr" lang="mr">{q.target}</span> जैसा दिखता है, पर अलग है! 👀 {p.diff}</>;
-      speak(`अरे! ये दोनों एक जैसे दिखते हैं। ध्यान से देखो। ${p.diff}`);
+      text = <span className="mr" lang="mr" style={{ fontSize: 44 }}>{o} 👀 🤔</span>;
+      heroSay(`अरे! ये दोनों एक जैसे दिखते हैं। ध्यान से देखो। ${p.diff}`);
     } else if (kind === 'matra') {
       const tm = MATRAS.find((m) => m.m === splitSyl(q.target)[1]);
-      text = <>व्यंजन सही है! 👍 अब <b>मात्रा</b> ध्यान से सुनो: <span className="mr" lang="mr">{o}</span> नहीं — आवाज़ "{tm.v}" वाली मात्रा खोजो।</>;
-      speak(`अक्षर सही है, बस मात्रा बदलो। आवाज़ ${tm.v} वाली मात्रा खोजो।`).then(() => speak(q.target, 'mr'));
+      text = <span className="mr" lang="mr" style={{ fontSize: 44 }}>{tc} ✅ + ◌? 👂</span>;
+      heroSay(`अक्षर सही है, बस मात्रा बदलो। आवाज़ ${tm.v} वाली मात्रा खोजो।`).then(() => speak(q.target, 'mr'));
     } else {
       text = pickOne(TRYAGAIN);
-      speak(text).then(() => promptSay());
+      heroSay(text).then(() => promptSay());
     }
     const wrong = [...state.wrong, o];
     const reveal = state.attempt >= 2; // after 2 tries, gently glow the right one
     if (reveal) noteHint();
     setState({ ...state, wrong, attempt: state.attempt + 1, fb: { kind: 'try', text }, reveal });
     if (reveal) setResults((r) => [...r, false]);
-    if (outcome === 'SIMPLIFY') setBanner('🪜 आसान करते हैं: अगली बार 2 ही विकल्प');
+    if (outcome === 'SIMPLIFY') setBanner('🪜 2️⃣');
     if (outcome === 'EASIER') easier.current = true;
-    if (outcome === 'COMPARE') setOverlay({ type: 'compare', a: tc, b: cc, diff: pairInfo(tc, cc).diff });
-    if (outcome === 'MATRA_REVIEW') setOverlay({ type: 'matra', c: tc });
+    if (outcome === 'COMPARE') { setOverlay({ type: 'compare', a: tc, b: cc, diff: pairInfo(tc, cc).diff }); setTimeout(() => heroSay('चलो, दोनों को साथ में देखें! ' + pairInfo(tc, cc).diff + '। दोनों को दबाकर सुनो।'), 1500); }
+    if (outcome === 'MATRA_REVIEW') { setOverlay({ type: 'matra', c: tc }); setTimeout(() => heroSay('मात्रा बदलने से आवाज़ बदलती है। हर एक को दबाकर सुनो!'), 1500); }
   };
 
   const goNext = () => {
@@ -133,16 +136,16 @@ export default function Game({ game, query }) {
   const opts = demo ? q.opts : q.opts;
   return (
     <>
-      <TopBar back="/map" onRepeat={() => promptSay()} />
+      <TopBar back="/map" onRepeat={() => { promptSay(); setHandRun((r) => r + 1); }} />
       <div className="main">
-        <div className="title" style={{ fontSize: 30 }}>{TITLES[game]}{matraMode ? ' — मात्रा' : ''} {demo && <span className="demo-badge">DEMO {demo}</span>}</div>
+        <div className="title" style={{ fontSize: 30 }}>{TITLES[game]}{matraMode ? ' ◌ा ◌ि' : ''} {demo && <span className="demo-badge">DEMO {demo}</span>}</div>
         <div className="dots">{Array.from({ length: ROUND }).map((_, k) => <i key={k} className={k < results.length ? (results[k] ? 'ok' : 'no') : k === i ? 'cur' : ''} />)}</div>
-        {banner && <div className="adaptbanner">{banner}</div>}
+        {banner && <div className="adaptbanner" style={{ fontSize: 30 }}>{banner}</div>}
         <div className="prompt">
           <button className="speakbig" onClick={() => promptSay()} aria-label="सुनो">🔊</button>
           {game === 'g2' && q.prompt && <div className="card" style={{ fontSize: 80, padding: '4px 24px' }}>{WORDS[q.prompt].e}</div>}
           {game === 'g3' && <div className="card giant" lang="mr" style={{ fontSize: 110, padding: '0 30px' }}>{q.target}</div>}
-          {cfg.showHint && game !== 'g3' && <div className="card" style={{ fontSize: 18 }}>💡 संकेत: {q.prompt || q.matra ? '' : ''}<span className="mr" lang="mr" style={{ fontSize: 34 }}>{(CONSONANTS.find((c) => c.l === q.target)?.word) || ''} {WORDS[CONSONANTS.find((c) => c.l === q.target)?.word]?.e || ''}</span></div>}
+          {cfg.showHint && game !== 'g3' && <div className="card" style={{ fontSize: 30 }}>💡 <span className="mr" lang="mr" style={{ fontSize: 34 }}>{(CONSONANTS.find((c) => c.l === q.target)?.word) || ''} {WORDS[CONSONANTS.find((c) => c.l === q.target)?.word]?.e || ''}</span></div>}
         </div>
         <div className="options" lang="mr" style={{ gridTemplateColumns: opts.length === 3 ? 'repeat(3,1fr)' : 'repeat(2,1fr)' }}>
           {opts.map((o) => (
@@ -151,31 +154,30 @@ export default function Game({ game, query }) {
         </div>
         {state.fb && <Feedback kind={state.fb.kind} text={state.fb.text} />}
         {(state.solved || state.reveal) && (
-          <div className="row"><button className="bigbtn green" onClick={goNext}>आगे ➡️</button></div>
+          <div className="row"><button className="bigbtn green" onClick={goNext}>➡️</button></div>
         )}
+        <DemoHand steps={handSteps} run={handRun} />
       </div>
       {overlay && (
         <div className="overlay">
           <div className="card">
             {overlay.type === 'compare' ? (
               <>
-                <div style={{ fontSize: 24, fontWeight: 800 }}>🔍 चलो, दोनों को साथ में देखें!</div>
+                <div style={{ fontSize: 40 }}>🔍👀</div>
                 <div className="compare" lang="mr">
                   <button className="big" onClick={() => speak(overlay.a, 'mr')}>{overlay.a}</button>
                   <button className="big" style={{ background: '#ffe3ea' }} onClick={() => speak(overlay.b, 'mr')}>{overlay.b}</button>
                 </div>
-                <p style={{ fontSize: 20, fontWeight: 700 }}>👀 {overlay.diff}</p>
-                <p style={{ fontSize: 16 }}>👆 दोनों पर टैप करके आवाज़ सुनो</p>
-                <button className="bigbtn green" onClick={() => setOverlay(null)}>समझ गया! 👍</button>
+                <p style={{ fontSize: 34 }}>👆🔊</p>
+                <button className="bigbtn green" onClick={() => setOverlay(null)}>👍</button>
               </>
             ) : (
               <>
-                <div style={{ fontSize: 24, fontWeight: 800 }}>🏡 मात्रा की सैर करें!</div>
-                <p style={{ fontSize: 20 }}>मात्रा बदलने से आवाज़ बदलती है। सुनो:</p>
+                <div style={{ fontSize: 40 }}>🏡 👆🔊</div>
                 <div className="strip" lang="mr">{MATRAS.slice(0, 6).map((m) => <button key={m.m} className="syl" onClick={() => speak(overlay.c + m.m, 'mr')}>{overlay.c + m.m}</button>)}</div>
                 <div className="row" style={{ marginTop: 12 }}>
-                  <button className="bigbtn purple small" onClick={() => nav('/barakhadi/' + overlay.c)}>🏡 बाराखड़ी गाँव</button>
-                  <button className="bigbtn green small" onClick={() => setOverlay(null)}>खेल जारी ▶</button>
+                  <button className="bigbtn purple small" onClick={() => nav('/barakhadi/' + overlay.c)}>🏡 ▶</button>
+                  <button className="bigbtn green small" onClick={() => setOverlay(null)}>▶</button>
                 </div>
               </>
             )}

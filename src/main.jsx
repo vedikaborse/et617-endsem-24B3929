@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './styles.css';
-import { Footer } from './components/ui.jsx';
+import { Footer, Scene, HeroGuide } from './components/ui.jsx';
 import { Home, MapScreen } from './screens/Home.jsx';
 import { LetterList, LetterExplorer, Barakhadi } from './screens/Letters.jsx';
 import Game from './screens/Game.jsx';
@@ -36,7 +36,10 @@ function App() {
     case 'about': view = <About />; break;
     default: view = <Home />;
   }
-  return <div className="app">{view}<Footer /></div>;
+  const THEME = { '': 'sky', map: 'sky', letters: p[1] === 'swar' ? 'mountain' : 'jungle', letter: 'jungle', barakhadi: 'village', game: { g1: 'river', g2: 'fair', g3: 'fair' }[p[1]] || 'fair', match: 'field', place: 'field', maze: 'treasure', speak: 'cave', reward: 'sky', teacher: 'plain', about: 'plain' };
+  const theme = THEME[p[0] || ''] || 'sky';
+  const adult = p[0] === 'teacher' || p[0] === 'about';
+  return <div className="app"><Scene theme={theme} />{view}{!adult && <HeroGuide />}<Footer /></div>;
 }
 
 createRoot(document.getElementById('root')).render(<App />);

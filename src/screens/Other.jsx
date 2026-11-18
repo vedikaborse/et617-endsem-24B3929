@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TopBar, nav, Hero, Mithu, Confetti, useModel, TOKEN } from '../components/ui.jsx';
+import { TopBar, nav, Hero, Mithu, Confetti, useModel, TOKEN, heroSay } from '../components/ui.jsx';
 import { speak, beep, voiceReport } from '../lib/audio.js';
 import { resetModel, seedConfusion, seedCorrect } from '../lib/model.js';
 import { judge, speechSupported, SAMPLE_OUTCOMES, VARIATION_RULES } from '../lib/speech.js';
@@ -8,20 +8,20 @@ export function Reward({ query }) {
   const s = +query.get('s') || 0, n = +query.get('n') || 1, g = query.get('g') || 'g1';
   const stars = s / n >= 0.8 ? 3 : s / n >= 0.5 ? 2 : 1;
   const msg = stars === 3 ? 'कमाल! तुम सच्चे अक्षरवीर हो!' : stars === 2 ? 'बहुत अच्छा! थोड़ा और अभ्यास, फिर तीन तारे!' : 'अच्छी कोशिश! हर बार तुम और सीख रहे हो!';
-  useEffect(() => { beep('star'); speak(msg); }, []);
+  useEffect(() => { beep('star'); setTimeout(() => heroSay(msg + ' फिर से खेलना है तो गोल तीर दबाओ।'), 500); }, []);
   const replay = { g4: '/match', g6: '/place', g7: '/maze', g8: '/speak' }[g] || '/game/' + g;
   return (
     <>
       <TopBar />
       <Confetti />
       <div className="main hero">
-        <div className="title">🏆 मिशन पूरा!</div>
+        <div className="title" style={{ fontSize: 60 }}>🏆</div>
         <div className="bigstars">{[0, 1, 2].map((k) => <span key={k} style={{ animationDelay: k * 0.25 + 's', opacity: k < stars ? 1 : 0.25 }}>⭐</span>)}</div>
-        <div className="row"><div className="bob"><Hero size={150} /></div><Mithu size={80} /></div>
-        <div className="bubble">{msg}<br />✅ {s} / {n}</div>
+        <div className="row"><div className="bob"><Hero size={150} fly /></div><Mithu size={80} /></div>
+        <div className="bubble" style={{ fontSize: 34 }}>✅ {s} / {n}</div>
         <div className="row" style={{ marginTop: 12 }}>
-          <button className="bigbtn" onClick={() => nav(replay)}>🔁 फिर खेलो</button>
-          <button className="bigbtn green" onClick={() => nav('/map')}>🗺️ नक्शा</button>
+          <button className="bigbtn" onClick={() => nav(replay)}>🔁</button>
+          <button className="bigbtn green" onClick={() => nav('/map')}>🗺️</button>
         </div>
       </div>
     </>

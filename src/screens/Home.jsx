@@ -1,68 +1,68 @@
 import React from 'react';
-import { Hero, Mithu, TopBar, nav, useInstruction, useModel } from '../components/ui.jsx';
+import { Mithu, TopBar, nav, useGuide, useModel } from '../components/ui.jsx';
 import { speak } from '../lib/audio.js';
 
+// Zones: no written names — a big picture + a spoken Hindi name when tapped.
 export const ZONES = [
-  { id: 'swar', name: 'स्वर पर्वत', emo: '⛰️', bg: '#7b5cff', to: '/letters/swar', say: 'स्वर पर्वत — अ, आ, इ, ई सीखो' },
-  { id: 'vyanjan', name: 'व्यंजन जंगल', emo: '🌳', bg: '#2e9d57', to: '/letters/vyanjan', say: 'व्यंजन जंगल — क, ख, ग सीखो' },
-  { id: 'g1', name: 'सुनो और पहचानो', emo: '👂', bg: '#ff8a00', to: '/game/g1', say: 'सुनो और सही अक्षर पहचानो' },
-  { id: 'g2', name: 'सही अक्षर चुनो', emo: '🎯', bg: '#ff5d8f', to: '/game/g2', say: 'चित्र देखो, सही अक्षर चुनो' },
-  { id: 'g3', name: 'जुड़वाँ अक्षर खोजो', emo: '🔍', bg: '#0fa3b1', to: '/game/g3', say: 'एक जैसा दिखने वाला अक्षर खोजो' },
-  { id: 'g4', name: 'अक्षर-चित्र मिलाओ', emo: '🧩', bg: '#e85d04', to: '/match', say: 'अक्षर और चित्र की जोड़ी बनाओ' },
-  { id: 'g5', name: 'बाराखड़ी गाँव', emo: '🏡', bg: '#9d4edd', to: '/barakhadi/क', say: 'बाराखड़ी गाँव — मात्रा लगाओ, नया अक्षर बनाओ' },
-  { id: 'g6', name: 'मात्रा मैदान', emo: '✋', bg: '#3a86ff', to: '/place', say: 'सही मात्रा खींचकर रखो' },
-  { id: 'g7', name: 'अक्षर भूलभुलैया', emo: '🗝️', bg: '#d62828', to: '/maze', say: 'भूलभुलैया में सही अक्षर पर चलो, खज़ाना पाओ' },
-  { id: 'g8', name: 'मेरी आवाज़', emo: '🎤', bg: '#c2305f', to: '/speak', say: 'बोलकर पढ़ो, मैं सुनूँगा' },
+  { id: 'swar', emo: '⛰️', mr: 'अ आ', bg: '#7b5cff', to: '/letters/swar', say: 'स्वर पर्वत! चलो अ, आ, इ सीखें।' },
+  { id: 'vyanjan', emo: '🌴', mr: 'क ख', bg: '#2e9d57', to: '/letters/vyanjan', say: 'व्यंजन जंगल! चलो क, ख, ग सीखें।' },
+  { id: 'g1', emo: '👂', mr: '', bg: '#0fa3b1', to: '/game/g1', say: 'सुनो और पहचानो!' },
+  { id: 'g2', emo: '🎯', mr: '', bg: '#ff5d8f', to: '/game/g2', say: 'चित्र देखो, सही अक्षर चुनो!' },
+  { id: 'g3', emo: '🔍', mr: '', bg: '#ff8a00', to: '/game/g3', say: 'जुड़वाँ अक्षर खोजो!' },
+  { id: 'g4', emo: '🧩', mr: '', bg: '#e85d04', to: '/match', say: 'अक्षर और चित्र की जोड़ी बनाओ!' },
+  { id: 'g5', emo: '🏡', mr: 'का कि', bg: '#9d4edd', to: '/barakhadi/क', say: 'बाराखड़ी गाँव! मात्रा लगाओ, नया अक्षर बनाओ।' },
+  { id: 'g6', emo: '✋', mr: 'ा ि', bg: '#3a86ff', to: '/place', say: 'मात्रा मैदान! मात्रा खींचकर रखो।' },
+  { id: 'g7', emo: '🗝️', mr: '', bg: '#d62828', to: '/maze', say: 'भूलभुलैया! खज़ाना ढूँढो।' },
+  { id: 'g8', emo: '🎤', mr: '', bg: '#c2305f', to: '/speak', say: 'आवाज़ गुफा! बोलकर पढ़ो।' },
 ];
 
+const HOME_LINE = 'नमस्ते! मैं अक्षरवीर! चलो, मराठी सीखने चलें? हरा बटन दबाओ!';
+
 export function Home() {
-  useInstruction('नमस्ते अक्षरवीर! चलो मराठी अक्षरों का मिशन शुरू करें। बड़ा बटन दबाओ!');
+  const g = useGuide(HOME_LINE, [{ sel: '.playbtn', act: 'tap' }]);
   return (
     <>
-      <TopBar onRepeat={() => speak('नमस्ते अक्षरवीर! चलो मराठी अक्षरों का मिशन शुरू करें। बड़ा बटन दबाओ!')} />
+      <TopBar onRepeat={g.replay} />
       <div className="main hero">
-        <div className="logo">मिशन मराठी<br /><span>अक्षरवीर!</span></div>
-        <div className="row">
-          <div className="bob"><Hero size={170} /></div>
-          <div className="bubble">नमस्ते! मैं अक्षरवीर।<br /><span className="mr" lang="mr">क ख ग</span> सीखने चलें? <Mithu size={46} /></div>
-        </div>
-        <button className="bigbtn green playbtn" onClick={() => nav('/map')} aria-label="खेलो">▶ खेलो</button>
+        <div className="logo" aria-label="मिशन मराठी अक्षरवीर">मिशन मराठी<br /><span>अक्षरवीर!</span></div>
+        <div className="row bob" style={{ fontSize: 70 }} lang="mr"><span className="mr">क</span><Mithu size={90} /><span className="mr">अ</span></div>
+        <button className="bigbtn green playbtn" onClick={() => { speak('चलो!'); nav('/map'); }} aria-label="खेलो">▶</button>
         <div className="row" style={{ marginTop: 10 }}>
-          <button className="bigbtn white small" onClick={() => nav('/letters/vyanjan')}>🔤 अक्षर</button>
-          <button className="bigbtn white small" onClick={() => nav('/speak')}>🎤 बोलो</button>
-          <button className="bigbtn white small" onClick={() => nav('/about')}>ℹ️</button>
+          <button className="bigbtn white small" aria-label="अक्षर" onClick={() => nav('/letters/vyanjan')}><span className="mr" lang="mr">क</span></button>
+          <button className="bigbtn white small" aria-label="बोलो" onClick={() => nav('/speak')}>🎤</button>
+          <button className="bigbtn white small" aria-label="जानकारी" style={{ opacity: .6 }} onClick={() => nav('/about')}>ℹ️</button>
         </div>
       </div>
+      {g.hand}
     </>
   );
 }
 
 export function MapScreen() {
   const m = useModel();
-  useInstruction('कोई भी जगह चुनो! सब खुली हैं।');
+  const g = useGuide('कोई भी तस्वीर दबाओ! सब खुली हैं।', [{ sel: '.zone:nth-child(2)', act: 'tap' }, { sel: '.zone:nth-child(4)', act: 'hover' }, { sel: '.zone:nth-child(10)', act: 'hover' }]);
   const played = Object.keys(m.games).length;
   return (
     <>
-      <TopBar onRepeat={() => speak('कोई भी जगह चुनो! सब खुली हैं।')} />
+      <TopBar onRepeat={g.replay} />
       <div className="main">
-        <div className="title">🗺️ अक्षर यात्रा</div>
         <div className="row" style={{ marginBottom: 10 }}>
-          <span style={{ fontWeight: 800 }}>🏆 {played}/{ZONES.length}</span>
+          <span style={{ fontSize: 34 }}>🏆</span>
           <div className="progressbar" style={{ flex: 1, maxWidth: 400 }}><div style={{ width: (played / ZONES.length) * 100 + '%' }} /></div>
         </div>
         <div className="map">
           <div className="zones">
             {ZONES.map((z) => (
-              <button key={z.id} className="zone" style={{ background: z.bg }} onClick={() => { speak(z.say); nav(z.to); }}>
-                <span className="open">🔓</span>
+              <button key={z.id} className="zone" style={{ background: z.bg }} aria-label={z.say} onClick={() => { speak(z.say); nav(z.to); }}>
                 <span className="emo">{z.emo}</span>
-                {z.name}
+                {z.mr && <span className="badge-l" lang="mr">{z.mr}</span>}
                 <span className="stars">{m.games[z.id] ? '⭐'.repeat(Math.min(3, m.games[z.id].best)) : '☆☆☆'}</span>
               </button>
             ))}
           </div>
         </div>
       </div>
+      {g.hand}
     </>
   );
 }

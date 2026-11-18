@@ -203,3 +203,69 @@ button { font-family: inherit; color: inherit; cursor: pointer; border: 0; }
 .trace { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: #f6f4ff; padding: 8px; border-radius: 8px; white-space: pre-wrap; }
 .about p, .about li { font-size: 17px; line-height: 1.5; }
 .about { user-select: text; -webkit-user-select: text; }
+
+/* ===== v2: voice + visuals first ===== */
+.app { background: transparent; position: relative; }
+.scene { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.topbar, .main, .footer { position: relative; z-index: 2; }
+.sc { position: absolute; line-height: 1; display: inline-block; opacity: .9; filter: drop-shadow(0 4px 0 rgba(0,0,0,.08)); }
+.sc.sway { transform-origin: bottom center; animation: sway 3.2s ease-in-out infinite; }
+@keyframes sway { 50% { transform: rotate(6deg); } }
+.sc.drift { animation: drift 26s linear infinite; } .sc.drift2 { animation: drift 34s linear infinite reverse; }
+@keyframes drift { 0% { transform: translateX(-30vw); } 100% { transform: translateX(80vw); } }
+.sc.spin { animation: spin 18s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
+.sc.flyx { animation: flyx 14s linear infinite; } @keyframes flyx { 0% { transform: translate(-40vw, 0); } 50% { transform: translate(10vw, -20px); } 100% { transform: translate(70vw, 10px); } }
+.sc.swing { transform-origin: top center; animation: swing 2.4s ease-in-out infinite; } @keyframes swing { 0%,100% { transform: rotate(-18deg); } 50% { transform: rotate(18deg); } }
+.sc.flutter { animation: flutter 7s ease-in-out infinite; } .sc.flutter2 { animation: flutter 9s ease-in-out infinite reverse; }
+@keyframes flutter { 0%,100% { transform: translate(0,0) scaleX(1); } 25% { transform: translate(60px,-30px) scaleX(.6); } 50% { transform: translate(120px,10px) scaleX(1); } 75% { transform: translate(40px,40px) scaleX(.6); } }
+.sc.walk { animation: walk 16s linear infinite alternate; } @keyframes walk { from { transform: translateX(-20vw) scaleX(-1); } to { transform: translateX(30vw) scaleX(-1); } }
+.sc.bob { animation: bob 2.4s ease-in-out infinite; }
+.sc.fall { animation: fallsc 6s linear infinite; } @keyframes fallsc { from { transform: translateY(-40vh); } to { transform: translateY(60vh); } }
+.sc.smoke { animation: smoke 3s ease-out infinite; } @keyframes smoke { from { transform: translateY(0) scale(.6); opacity: .8; } to { transform: translateY(-80px) scale(1.4); opacity: 0; } }
+.sc.kite { animation: kite 5s ease-in-out infinite; } .sc.kite2 { animation: kite 6s ease-in-out infinite reverse; } @keyframes kite { 50% { transform: translate(30px,-20px) rotate(12deg); } }
+.sc.wave { animation: wavex 3s ease-in-out infinite; } @keyframes wavex { 50% { transform: translateX(30px); } }
+.sc.jump { animation: fishjump 3s ease-in-out infinite; } @keyframes fishjump { 0%,60%,100% { transform: translateY(0) rotate(0); } 75% { transform: translateY(-80px) rotate(-30deg); } }
+.sc.rise { animation: rise 9s linear infinite; } .sc.rise2 { animation: rise 12s linear infinite; } @keyframes rise { from { transform: translateY(0); } to { transform: translateY(-110vh); } }
+.sc.twinkle { animation: twinkle 1.8s ease-in-out infinite; } @keyframes twinkle { 50% { opacity: .3; transform: scale(.7); } }
+
+/* hero animations */
+.hero-svg .cape { transform-origin: 50% 0%; animation: cape 0.9s ease-in-out infinite; transform-box: fill-box; }
+@keyframes cape { 50% { transform: skewX(-8deg) scaleY(1.04); } }
+.hero-svg .arm-wave { transform-origin: 126px 132px; animation: wavearm 1.2s ease-in-out infinite; }
+@keyframes wavearm { 50% { transform: rotate(-18deg); } }
+.hero-svg .eyes { animation: blink 4s infinite; transform-origin: 100px 82px; }
+@keyframes blink { 0%,94%,100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+.mithu .wing { transform-origin: 34px 62px; animation: wing .5s ease-in-out infinite; } @keyframes wing { 50% { transform: rotate(-25deg); } }
+
+/* flying voice guide */
+.heroguide { position: fixed; left: 8px; bottom: 30px; z-index: 40; background: none; animation: flyin 1.2s cubic-bezier(.2,.9,.3,1.2) both; display: flex; align-items: flex-end; flex-direction: column; }
+@keyframes flyin { 0% { transform: translate(-60vw, -50vh) rotate(-25deg) scale(.6); } 70% { transform: translate(10px, -10px) rotate(5deg) scale(1.05); } 100% { transform: none; } }
+.heroguide .hero-svg { animation: hover 2s ease-in-out 1.2s infinite; }
+@keyframes hover { 50% { transform: translateY(-8px); } }
+.guide-bubble { background: #fff; border-radius: 22px; padding: 4px 12px; font-size: 26px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 6px; margin-left: 50px; }
+.mini-waves { display: flex; gap: 3px; align-items: center; height: 24px; }
+.mini-waves i { width: 5px; height: 6px; background: var(--pink); border-radius: 3px; display: block; }
+.guide-bubble.talking .mini-waves i { animation: wave .7s infinite ease-in-out; }
+.guide-bubble.talking .mini-waves i:nth-child(2) { animation-delay: .15s } .guide-bubble.talking .mini-waves i:nth-child(3) { animation-delay: .3s }
+
+/* demo hand */
+.demohand { position: fixed; z-index: 70; pointer-events: none; transition: left .7s ease-in-out, top .7s ease-in-out, opacity .4s; transform: translate(-30%, -10%); }
+.demohand.slow { transition: left 1.1s ease-in-out, top 1.1s ease-in-out; }
+.demohand.gone { opacity: 0; }
+.handemo { font-size: 64px; display: block; filter: drop-shadow(0 6px 4px rgba(0,0,0,.3)); transition: transform .2s; }
+.demohand.press .handemo { transform: scale(.82); }
+.ripple { position: absolute; left: 6px; top: -8px; width: 40px; height: 40px; border-radius: 50%; border: 5px solid #fff; animation: ripple .6s ease-out; }
+@keyframes ripple { from { transform: scale(.3); opacity: 1; } to { transform: scale(2); opacity: 0; } }
+.ghostchip { position: absolute; left: -10px; top: -70px; background: var(--sun); border-radius: 16px; font-size: 44px; padding: 0 12px; box-shadow: var(--shadow); }
+
+/* text-free feedback */
+.feedback { justify-content: center; background: rgba(255,255,255,.92) !important; flex-wrap: wrap; }
+.feedback.good { box-shadow: 0 0 0 5px #2ec27e; } .feedback.try { box-shadow: 0 0 0 5px #ffc93c; } .feedback.info { box-shadow: 0 0 0 5px #7b5cff; }
+.fb-icon { font-size: 52px; }
+.fb-extra { width: 100%; }
+.mascot-mini.jump { animation: pop .5s 2; } .mascot-mini.tilt { animation: tilt 1s; }
+@keyframes tilt { 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
+.zone { min-height: 140px; } .zone .emo { font-size: 76px; }
+.zone .badge-l { font-family: var(--mr); font-size: 26px; background: rgba(255,255,255,.3); border-radius: 12px; padding: 0 8px; }
+.iconround { width: 88px; height: 88px; border-radius: 50%; font-size: 44px; display: grid; place-items: center; }
+@media (max-width: 600px) { .heroguide { bottom: 34px; } .heroguide .hero-svg { width: 70px; height: 77px; } }

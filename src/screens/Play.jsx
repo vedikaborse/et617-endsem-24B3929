@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { TopBar, nav, Feedback, PRAISE, pickOne, shuffle, useInstruction } from '../components/ui.jsx';
+import { TopBar, nav, Feedback, PRAISE, pickOne, shuffle, useGuide, heroSay, DemoHand } from '../components/ui.jsx';
 import { WORDS, CONSONANTS, MATRAS } from '../data/marathi.js';
 import { speak, beep } from '../lib/audio.js';
 import { recordAnswer, addStars, markGame } from '../lib/model.js';
@@ -14,27 +14,27 @@ export function Match() {
   const [done, setDone] = useState([]);
   const [bad, setBad] = useState(null);
   const [round, setRound] = useState(0);
-  useInstruction('अक्षर पर टैप करो, फिर उसका चित्र ढूँढो!', [round]);
+  const g = useGuide('पहले अक्षर दबाओ, फिर उसका चित्र दबाओ!', [{ sel: '.matchgrid > div:first-child .mitem', act: 'tap' }, { sel: '.matchgrid > div:last-child .mitem:nth-child(2)', act: 'tap' }], [round]);
   const tapLetter = (l) => { if (done.includes(l)) return; setSel(l); speak(l, 'mr'); };
   const tapPic = (p) => {
     if (done.includes(p.l)) return;
     speak(p.w, 'mr');
-    if (!sel) { speak('पहले अक्षर पर टैप करो!'); return; }
+    if (!sel) { heroSay('पहले अक्षर दबाओ!'); g.runHand(); return; }
     const ok = sel === p.l;
     recordAnswer({ game: 'g4', target: p.l, chosen: sel, correct: ok });
     if (ok) {
       beep('ok'); const d = [...done, p.l]; setDone(d); setSel(null); addStars(1);
-      if (d.length === set.length) { speak('सारी जोड़ियाँ बन गईं! शाबाश!'); }
-      else speak(pickOne(PRAISE));
-    } else { beep('bad'); setBad(p.l); setTimeout(() => setBad(null), 500); speak(`ये ${p.w} है। सुनो, इसकी पहली आवाज़ क्या है?`); }
+      if (d.length === set.length) { heroSay('सारी जोड़ियाँ बन गईं! शाबाश!'); }
+      else heroSay(pickOne(PRAISE));
+    } else { beep('bad'); setBad(p.l); setTimeout(() => setBad(null), 500); heroSay(`ये ${WORDS[p.w].hi} है। सुनो, इसकी पहली आवाज़ क्या है?`).then(() => speak(p.w, 'mr')); }
   };
   const again = () => { const s = mk(); setSet(s); setPics(shuffle(s)); setDone([]); setSel(null); setRound(round + 1); };
   const finished = done.length === set.length;
   return (
     <>
-      <TopBar back="/map" onRepeat={() => speak('अक्षर पर टैप करो, फिर उसका चित्र ढूँढो!')} />
+      <TopBar back="/map" onRepeat={g.replay} />
       <div className="main">
-        <div className="title" style={{ fontSize: 30 }}>🧩 अक्षर-चित्र मिलाओ</div>
+        <div className="title" style={{ fontSize: 40 }}>🧩</div>
         <div className="matchgrid">
           <div style={{ display: 'grid', gap: 12 }} lang="mr">
             {set.map((s) => <button key={s.l} className={'mitem mr ' + (sel === s.l ? 'sel ' : '') + (done.includes(s.l) ? 'done' : '')} onClick={() => tapLetter(s.l)}>{s.l}{done.includes(s.l) && ' ✅'}</button>)}
@@ -43,8 +43,9 @@ export function Match() {
             {pics.map((p) => <button key={p.l} className={'mitem ' + (done.includes(p.l) ? 'done ' : '') + (bad === p.l ? 'wrong' : '')} onClick={() => tapPic(p)}>{p.e}{done.includes(p.l) && <span className="mr" lang="mr" style={{ fontSize: 22, position: 'absolute', bottom: 4 }}>{p.w}</span>}</button>)}
           </div>
         </div>
-        {finished && <Feedback text="सारी जोड़ियाँ बन गईं! 🎉"><div className="row"><button className="bigbtn small" onClick={again}>🔁 फिर से</button><button className="bigbtn small green" onClick={() => { markGame('g4', 3); nav('/reward?g=g4&s=4&n=4'); }}>🏆 इनाम</button></div></Feedback>}
+        {finished && <Feedback text="सारी जोड़ियाँ बन गईं!"><div className="row"><button className="bigbtn small" onClick={again}>🔁</button><button className="bigbtn small green" onClick={() => { markGame('g4', 3); nav('/reward?g=g4&s=4&n=4'); }}>🏆</button></div></Feedback>}
       </div>
+      {g.hand}
     </>
   );
 }
@@ -67,7 +68,8 @@ export function Place() {
   const slotRef = useRef();
   const it = PLACE_ITEMS[i];
   const chips = React.useMemo(() => shuffle([...new Set([it.m, ...{ 'ा': ['ो', 'ि'], 'ो': ['ा', 'ौ'], 'ि': ['ी', 'ु'], 'ु': ['ू', 'ि'], 'े': ['ै', 'ा'], 'ू': ['ु', 'ो'] }[it.m]])]), [i]);
-  const say = () => speak('चित्र देखो, शब्द सुनो, और सही मात्रा खाली डिब्बे में रखो!', 'hi').then(() => speak(it.word, 'mr'));
+  const [handRun, setHandRun] = useState(0);
+  const say = () => { setHandRun((r) => r + 1); return heroSay('चित्र देखो, शब्द सुनो। नीचे से मात्रा उठाओ और खाली डिब्बे में रखो!').then(() => speak(it.word, 'mr')); };
   useEffect(() => { const t = setTimeout(say, 300); return () => clearTimeout(t); }, [i]);
 
   const drop = (m) => {
@@ -75,12 +77,12 @@ export function Place() {
     const ok = m === it.m;
     recordAnswer({ game: 'g6', target: it.c + it.m, chosen: it.c + m, correct: ok });
     setPlaced(m);
-    if (ok) { beep('ok'); addStars(1); setScore(score + 1); setFb({ kind: 'good', text: `${pickOne(PRAISE)} ${it.c} + ${it.m} = ${it.c + it.m}` }); speak(it.word, 'mr'); }
+    if (ok) { beep('ok'); addStars(1); setScore(score + 1); setFb({ kind: 'good', text: '' }); heroSay(pickOne(PRAISE)).then(() => speak(it.word, 'mr')); }
     else {
       beep('bad');
       const v = MATRAS.find((x) => x.m === m).v;
-      setFb({ kind: 'try', text: `ये बना "${it.c + m}" — आवाज़ "${v}" वाली। शब्द फिर सुनो और दूसरी मात्रा आज़माओ!` });
-      speak(`ये बना`, 'hi').then(() => speak(it.c + m, 'mr')).then(() => speak('शब्द फिर सुनो', 'hi')).then(() => speak(it.word, 'mr'));
+      setFb({ kind: 'try', text: '' });
+      heroSay(`ये बना`).then(() => speak(it.c + m, 'mr')).then(() => heroSay('शब्द फिर सुनो, और दूसरी मात्रा रखो')).then(() => speak(it.word, 'mr'));
       setTimeout(() => setPlaced(null), 1400);
     }
   };
@@ -112,7 +114,7 @@ export function Place() {
     <>
       <TopBar back="/map" onRepeat={say} />
       <div className="main" style={{ textAlign: 'center' }}>
-        <div className="title" style={{ fontSize: 30 }}>✋ मात्रा मैदान</div>
+        <div className="title" style={{ fontSize: 40 }}>✋</div>
         <div className="dots">{PLACE_ITEMS.map((_, k) => <i key={k} className={k < i ? 'ok' : k === i ? 'cur' : ''} />)}</div>
         <div className="row"><button className="speakbig" onClick={say}>🔊</button><div className="card" style={{ fontSize: 90, padding: '0 26px' }}>{WORDS[it.word].e}</div></div>
         <div className="slotword" lang="mr" style={{ marginTop: 14 }}>
@@ -120,13 +122,14 @@ export function Place() {
           <div ref={slotRef} className={'slot ' + (over ? 'over ' : '') + (solved ? 'filled' : '')} onClick={() => sel && drop(sel)}>{placed ? <span>{it.c + placed}</span> : <span style={{ fontSize: 30 }}>❓</span>}</div>
           <span>{it.rest}</span>
         </div>
-        <p style={{ fontSize: 18, fontWeight: 700 }}>👇 मात्रा को खींचो — या टैप करो, फिर डिब्बे पर टैप करो</p>
+        <div style={{ fontSize: 34 }}>👇</div>
         <div className="tray" lang="mr">
           {chips.map((m) => <button key={m} className={'chip ' + (sel === m ? 'sel' : '')} onPointerDown={(e) => onDown(e, m)}>◌{m}</button>)}
         </div>
         {drag && drag.moved && <div className="dragghost chip mr" style={{ left: drag.x, top: drag.y, display: 'grid', placeItems: 'center' }}>◌{drag.m}</div>}
         {fb && <Feedback kind={fb.kind} text={fb.text} />}
-        {solved && <div className="row"><button className="bigbtn green" onClick={nextItem}>आगे ➡️</button></div>}
+        {solved && <div className="row"><button className="bigbtn green" onClick={nextItem}>➡️</button></div>}
+        <DemoHand steps={() => [{ sel: '.tray .chip', act: 'drag', to: '.slot' }]} run={handRun} delay={2600} />
       </div>
     </>
   );
@@ -152,24 +155,25 @@ export function Maze() {
   const [trail, setTrail] = useState(['0,0']);
   const [bad, setBad] = useState(null);
   const [won, setWon] = useState(false);
-  const say = () => speak('सिर्फ़ इस अक्षर पर चलो और खज़ाने तक पहुँचो!', 'hi').then(() => speak(T.t, 'mr'));
+  const [handRun, setHandRun] = useState(0);
+  const say = () => { setHandRun((r) => r + 1); return heroSay('हीरो को खज़ाने तक ले चलो! सिर्फ़ इस अक्षर पर कदम रखो।').then(() => speak(T.t, 'mr')); };
   useEffect(() => { setPos([0, 0]); setTrail(['0,0']); setWon(false); const t = setTimeout(say, 300); return () => clearTimeout(t); }, [lvl]);
   const tap = (cell) => {
     if (won) return;
     const adj = Math.abs(cell.a - pos[0]) + Math.abs(cell.b - pos[1]) === 1;
-    if (!adj) { speak('पास वाले डिब्बे पर टैप करो!'); return; }
+    if (!adj) { heroSay('हीरो के पास वाला डिब्बा दबाओ!'); setHandRun((r) => r + 1); return; }
     const ok = cell.l === T.t;
     recordAnswer({ game: 'g7', target: T.t, chosen: cell.l, correct: ok });
-    if (!ok) { beep('bad'); setBad(cell.a + ',' + cell.b); setTimeout(() => setBad(null), 500); speak(`ये ${cell.l} है! हमें चाहिए`, 'hi').then(() => speak(T.t, 'mr')); return; }
+    if (!ok) { beep('bad'); setBad(cell.a + ',' + cell.b); setTimeout(() => setBad(null), 500); heroSay(`ये ${cell.l} है! हमें चाहिए`).then(() => speak(T.t, 'mr')); return; }
     beep('ok'); setPos([cell.a, cell.b]); setTrail([...trail, cell.a + ',' + cell.b]);
-    if (cell.a === N - 1 && cell.b === N - 1) { setWon(true); addStars(2); beep('star'); speak('खज़ाना मिल गया! तुम सच्चे अक्षरवीर हो!'); }
+    if (cell.a === N - 1 && cell.b === N - 1) { setWon(true); addStars(2); beep('star'); heroSay('खज़ाना मिल गया! तुम सच्चे अक्षरवीर हो!'); }
   };
   return (
     <>
       <TopBar back="/map" onRepeat={say} />
       <div className="main" style={{ textAlign: 'center' }}>
-        <div className="title" style={{ fontSize: 30 }}>🗝️ अक्षर भूलभुलैया</div>
-        <div className="row"><button className="speakbig" onClick={say}>🔊</button><div style={{ fontSize: 22, fontWeight: 800 }}>सिर्फ़ <span className="mr" lang="mr" style={{ fontSize: 50, color: 'var(--saffron)' }}>{T.t}</span> पर चलो → 💎</div></div>
+        <div className="title" style={{ fontSize: 40 }}>🗝️</div>
+        <div className="row"><button className="speakbig" onClick={say}>🔊</button><div style={{ fontSize: 34, fontWeight: 800 }}>🦸 ➡️ <span className="mr" lang="mr" style={{ fontSize: 60, color: 'var(--saffron)' }}>{T.t}</span> ➡️ 💎</div></div>
         <div className="maze" lang="mr" style={{ gridTemplateColumns: `repeat(${N},1fr)` }}>
           {maze.grid.map((cell) => {
             const k = cell.a + ',' + cell.b; const here = pos[0] === cell.a && pos[1] === cell.b;
@@ -177,7 +181,8 @@ export function Maze() {
             return <button key={k} className={'cell ' + (here ? 'hero ' : trail.includes(k) ? 'path ' : '') + (isEnd && !here ? 'treasure ' : '') + (bad === k ? 'bad' : '')} onClick={() => tap(cell)}>{here ? '🦸' : isEnd ? (won ? '💎' : cell.l) : cell.l}</button>;
           })}
         </div>
-        {won && <Feedback text="खज़ाना मिल गया! 💎 ⭐⭐"><div className="row"><button className="bigbtn small" onClick={() => setLvl(lvl + 1)}>➡️ अगला नक्शा</button><button className="bigbtn small green" onClick={() => { markGame('g7', 3); nav('/reward?g=g7&s=1&n=1'); }}>🏆</button></div></Feedback>}
+        <DemoHand steps={() => { const nx = maze.path.find(([a, b]) => !trail.includes(a + ',' + b)); return nx ? [{ sel: '.cell.hero', act: 'hover' }, { sel: `.maze .cell:nth-child(${nx[0] * N + nx[1] + 1})`, act: 'tap' }] : []; }} run={handRun} delay={2400} />
+        {won && <Feedback text="खज़ाना मिल गया!"><div className="row"><button className="bigbtn small" onClick={() => setLvl(lvl + 1)}>🗺️ ➡️</button><button className="bigbtn small green" onClick={() => { markGame('g7', 3); nav('/reward?g=g7&s=1&n=1'); }}>🏆</button></div></Feedback>}
       </div>
     </>
   );
