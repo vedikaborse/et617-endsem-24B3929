@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { TopBar, nav, Hero, Mithu, Confetti, useModel, TOKEN, heroSay } from '../components/ui.jsx';
 import { speak, beep, voiceReport } from '../lib/audio.js';
-import { resetModel, seedConfusion, seedCorrect } from '../lib/model.js';
+import { resetModel, seedConfusion, seedCorrect, recordRound } from '../lib/model.js';
 import { judge, speechSupported, SAMPLE_OUTCOMES, VARIATION_RULES } from '../lib/speech.js';
 
 export function Reward({ query }) {
   const s = +query.get('s') || 0, n = +query.get('n') || 1, g = query.get('g') || 'g1';
   const stars = s / n >= 0.8 ? 3 : s / n >= 0.5 ? 2 : 1;
   const msg = stars === 3 ? 'कमाल! तुम सच्चे अक्षरवीर हो!' : stars === 2 ? 'बहुत अच्छा! थोड़ा और अभ्यास, फिर तीन तारे!' : 'अच्छी कोशिश! हर बार तुम और सीख रहे हो!';
-  useEffect(() => { beep('star'); setTimeout(() => heroSay(msg + ' फिर से खेलना है तो गोल तीर दबाओ।'), 500); }, []);
+  const [rec] = useState(() => recordRound(g, s));
+  useEffect(() => {
+    beep('star');
+    const extra = rec.newRecord ? ' वाह! ये तो नया रिकॉर्ड है!' : rec.newSessionBest ? ' आज का सबसे अच्छा स्कोर!' : '';
+    setTimeout(() => heroSay(msg + extra + ' फिर से खेलना है तो गोल तीर दबाओ।'), 500);
+  }, []);
   const replay = { g4: '/match', g6: '/place', g7: '/maze', g8: '/speak' }[g] || '/game/' + g;
   return (
     <>
@@ -19,6 +24,11 @@ export function Reward({ query }) {
         <div className="bigstars">{[0, 1, 2].map((k) => <span key={k} style={{ animationDelay: k * 0.25 + 's', opacity: k < stars ? 1 : 0.25 }}>⭐</span>)}</div>
         <div className="row"><div className="bob"><Hero size={150} fly /></div><Mithu size={80} /></div>
         <div className="bubble" style={{ fontSize: 34 }}>✅ {s} / {n}</div>
+        <div className="row" style={{ marginTop: 8 }}>
+          <span className={'record ' + (rec.newSessionBest || rec.newRecord ? 'new' : '')} aria-label="आज का सबसे अच्छा">📅🏆 {rec.sessionBest}</span>
+          <span className={'record ' + (rec.newRecord ? 'new' : '')} aria-label="सबसे अच्छा">👑 {rec.allTimeBest}</span>
+          {(rec.newRecord || rec.newSessionBest) && <span style={{ fontSize: 44 }}>🆕</span>}
+        </div>
         <div className="row" style={{ marginTop: 12 }}>
           <button className="bigbtn" onClick={() => nav(replay)}>🔁</button>
           <button className="bigbtn green" onClick={() => nav('/map')}>🗺️</button>
@@ -74,6 +84,14 @@ export function Teacher() {
           <p>Games played: {Object.entries(m.games).map(([k, v]) => `${k}(${v.played})`).join(', ') || 'none'}</p>
           <button className="tbtn warn" onClick={() => { if (confirm('Reset this device\'s learner progress?')) resetModel(); }}>Reset learner (shared tablet)</button>
           <button className="tbtn" onClick={() => seedCorrect('भ', 2)}>Seed: 2 correct visual taps of भ</button>
+        </div>
+
+        <div className="card">
+          <h2>🏆 Learning sessions & high scores</h2>
+          <p style={{ fontSize: 13 }}>A session starts when the app is opened on the tablet or when "Reset learner" is pressed. High score = best first-try correct answers in one round of that game. Stored only in this device's localStorage.</p>
+          <p>All-time best (this device): {Object.entries(m.best || {}).map(([k, v]) => `${k}: ${v}`).join(' · ') || 'none yet'}</p>
+          <table><thead><tr><th>start</th><th>minutes</th><th>answers</th><th>accuracy</th><th>stars</th><th>session best per game</th></tr></thead>
+            <tbody>{[...(m.sessions || [])].reverse().slice(0, 10).map((x) => <tr key={x.id}><td>{fmt(x.start)}</td><td>{Math.max(0, Math.round((x.last - x.start) / 60000))}</td><td>{x.answers}</td><td>{x.answers ? Math.round((x.correct / x.answers) * 100) + '%' : '–'}</td><td>{x.stars}</td><td>{Object.entries(x.scores).map(([k, v]) => `${k}:${v}`).join(' ') || '–'}</td></tr>)}</tbody></table>
         </div>
 
         <div className="card">

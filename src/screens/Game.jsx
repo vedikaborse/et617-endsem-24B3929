@@ -152,7 +152,7 @@ export default function Game({ game, query }) {
             <button key={o} className={'opt ' + (state.solved && o === q.target ? 'right' : '') + (state.wrong.includes(o) ? ' wrong' : '') + (state.reveal && !state.solved && o === q.target ? ' glow' : '')} onClick={() => answer(o)}>{o}</button>
           ))}
         </div>
-        {state.fb && <Feedback kind={state.fb.kind} text={state.fb.text} />}
+        {state.fb && <Feedback key={state.attempt + (state.solved ? 's' : '')} kind={state.fb.kind} text={state.fb.text} />}
         {(state.solved || state.reveal) && (
           <div className="row"><button className="bigbtn green" onClick={goNext}>➡️</button></div>
         )}

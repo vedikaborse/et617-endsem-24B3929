@@ -18,6 +18,8 @@ export const fresh = () => ({
   log: [],             // every answer
   adapt: [],           // every adaptation decision with the rule that fired
   speech: [],          // every speech judgement
+  best: {},            // gameId -> all-time best score on this device
+  sessions: [],        // one entry per learning session (app opening / new learner)
   started: Date.now(),
 });
 
@@ -36,8 +38,29 @@ function save() {
 }
 export const getModel = () => state;
 export const subscribe = (f) => { subs.add(f); return () => subs.delete(f); };
-export function resetModel() { state = fresh(); save(); }
-export function addStars(n) { state.stars += n; save(); }
+export function resetModel() { state = fresh(); startSession(); }
+
+// ---------- Learning sessions & high scores ----------
+// A session = one turn on the shared tablet (app opened, or teacher pressed "new learner").
+export function startSession() {
+  state.sessions = (state.sessions || []).slice(-19);
+  state.best = state.best || {};
+  state.sessions.push({ id: Date.now(), start: Date.now(), last: Date.now(), answers: 0, correct: 0, stars: 0, scores: {} });
+  save();
+}
+export const currentSession = () => state.sessions[state.sessions.length - 1];
+// Record a finished round. Returns whether it beat this session's best / the all-time best.
+export function recordRound(game, score) {
+  const S = currentSession();
+  const prevSession = S.scores[game] ?? -1;
+  const prevAll = state.best[game] ?? -1;
+  S.scores[game] = Math.max(prevSession, score);
+  state.best[game] = Math.max(prevAll, score);
+  S.last = Date.now();
+  save();
+  return { sessionBest: S.scores[game], allTimeBest: state.best[game], newSessionBest: score > prevSession && prevSession >= 0, newRecord: score > prevAll && prevAll >= 0, first: prevAll < 0 };
+}
+export function addStars(n) { state.stars += n; const S = currentSession(); if (S) S.stars += n; save(); }
 export function markGame(id, score) {
   const g = state.games[id] || { played: 0, best: 0 };
   g.played += 1; g.best = Math.max(g.best, score); state.games[id] = g; save();
@@ -74,6 +97,7 @@ export function recordAnswer({ game, target, chosen, correct, ms = 0, attempt = 
   state.log.push({ t: Date.now(), game, target, chosen, correct, kind, ms, attempt, level: state.level });
   const L = (state.letters[target] = state.letters[target] || { seen: 0, correct: 0, wrong: 0 });
   L.seen += 1; correct ? (L.correct += 1) : (L.wrong += 1);
+  const S = currentSession(); if (S) { S.answers += 1; if (correct) S.correct += 1; S.last = Date.now(); }
 
   let outcome = 'CONTINUE'; const events = [];
   if (correct) {
@@ -151,3 +175,6 @@ export function seedCorrect(target, n = 2) {
   for (let i = 0; i < n; i++) state.log.push({ t: Date.now(), game: 'demo-seed', target, chosen: target, correct: true, kind: 'correct', ms: 0, attempt: 1, level: state.level });
   save();
 }
+
+// Every app opening on the shared tablet starts a new learning session.
+startSession();

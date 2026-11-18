@@ -14,7 +14,7 @@ export function nav(path) { window.location.hash = path; }
 // ---------- Original cartoon hero "अक्षरवीर" ----------
 // A village superhero kid: spiky hair, orange mask, saffron cape, star-suit with अ emblem.
 export function Hero({ size = 160, mood = 'happy', fly = false, className = '' }) {
-  const mouth = mood === 'happy' ? 'M86 104 Q100 120 114 104 Z' : mood === 'think' ? 'M90 110 Q100 106 110 110' : 'M88 108 Q100 116 112 108';
+  const mouth = mood === 'happy' ? 'M86 104 Q100 120 114 104 Z' : mood === 'sad' ? 'M86 114 Q100 100 114 114' : mood === 'think' ? 'M90 110 Q100 106 110 110' : 'M88 108 Q100 116 112 108';
   return (
     <svg className={'hero-svg ' + className} width={size} height={size * 1.1} viewBox="0 0 200 220" aria-label="अक्षरवीर">
       <defs>
@@ -44,6 +44,7 @@ export function Hero({ size = 160, mood = 'happy', fly = false, className = '' }
           <circle cx="85" cy="78" r="3" fill="#fff" /><circle cx="125" cy="78" r="3" fill="#fff" /></g>
         <path d={mouth} stroke="#26203b" strokeWidth="4" fill={mood === 'happy' ? '#ff5d8f' : 'none'} strokeLinecap="round" strokeLinejoin="round" />
         <circle cx="66" cy="102" r="7" fill="#ff8fa3" opacity=".7" /><circle cx="134" cy="102" r="7" fill="#ff8fa3" opacity=".7" />
+        {mood === 'sad' && (<><path d="M66 62 L92 70 M134 62 L108 70" stroke="#26203b" strokeWidth="5" strokeLinecap="round" /><path className="tear" d="M70 96 Q66 106 70 110 Q74 106 70 96Z" fill="#5ac8fa" /></>)}
       </g>
     </svg>
   );
@@ -189,11 +190,14 @@ export function Confetti({ n = 60 }) {
 }
 
 // Feedback = hero reaction + big icon. The words are SPOKEN (by the caller), not shown.
-const FB_ICON = { good: '🌟👍', try: '🤔👀', info: '👂🔁' };
+const FB_ICON = { good: '🌟👍', try: '😢🔁', info: '👂🔁' };
 export function Feedback({ kind = 'good', text, children }) {
   return (
     <div className={'feedback ' + kind} role="status" aria-label={typeof text === 'string' ? text : ''}>
-      <div className={'mascot-mini ' + (kind === 'good' ? 'jump' : 'tilt')}><Hero size={64} mood={kind === 'good' ? 'happy' : 'think'} /></div>
+      <div className={'mascot-mini ' + (kind === 'good' ? 'jump' : kind === 'try' ? 'bonked' : 'tilt')}>
+        {kind === 'try' && <><span className="coconut">🥥</span><span className="bonkstars">💫</span></>}
+        <Hero size={kind === 'try' ? 84 : 64} mood={kind === 'good' ? 'happy' : kind === 'try' ? 'sad' : 'think'} />
+      </div>
       <div className="fb-icon">{FB_ICON[kind]}</div>
       {children && <div className="fb-extra">{children}</div>}
     </div>

@@ -75,6 +75,20 @@ export function beep(kind = 'ok') {
   if (muted) return;
   try {
     ctx = ctx || new (window.AudioContext || window.webkitAudioContext)();
+    if (kind === 'bad') { // cartoon coconut "bonk" + sad "wah-wah"
+      const t0 = ctx.currentTime;
+      const o = ctx.createOscillator(); const g = ctx.createGain();
+      o.type = 'square'; o.frequency.setValueAtTime(180, t0 + 0.35); o.frequency.exponentialRampToValueAtTime(60, t0 + 0.5);
+      g.gain.setValueAtTime(0.0001, t0); g.gain.setValueAtTime(0.25, t0 + 0.35); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.55);
+      o.connect(g).connect(ctx.destination); o.start(t0); o.stop(t0 + 0.6);
+      [392, 370, 349, 294].forEach((f, i) => {
+        const o2 = ctx.createOscillator(); const g2 = ctx.createGain(); const t = t0 + 0.65 + i * 0.22;
+        o2.type = 'triangle'; o2.frequency.setValueAtTime(f, t); o2.frequency.linearRampToValueAtTime(f * (i === 3 ? 0.9 : 0.97), t + 0.2);
+        g2.gain.setValueAtTime(0.0001, t); g2.gain.exponentialRampToValueAtTime(0.12, t + 0.03); g2.gain.exponentialRampToValueAtTime(0.0001, t + (i === 3 ? 0.45 : 0.2));
+        o2.connect(g2).connect(ctx.destination); o2.start(t); o2.stop(t + 0.5);
+      });
+      return;
+    }
     const notes = kind === 'ok' ? [523, 659, 784] : kind === 'star' ? [784, 988, 1175, 1568] : [330, 262];
     notes.forEach((f, i) => {
       const o = ctx.createOscillator(); const g = ctx.createGain();

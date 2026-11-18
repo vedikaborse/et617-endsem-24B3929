@@ -269,3 +269,16 @@ button { font-family: inherit; color: inherit; cursor: pointer; border: 0; }
 .zone .badge-l { font-family: var(--mr); font-size: 26px; background: rgba(255,255,255,.3); border-radius: 12px; padding: 0 8px; }
 .iconround { width: 88px; height: 88px; border-radius: 50%; font-size: 44px; display: grid; place-items: center; }
 @media (max-width: 600px) { .heroguide { bottom: 34px; } .heroguide .hero-svg { width: 70px; height: 77px; } }
+
+/* coconut bonk (hero gets bonked, never the child) */
+.mascot-mini { position: relative; }
+.mascot-mini.bonked .hero-svg { animation: squash .5s .35s; transform-origin: bottom center; }
+@keyframes squash { 30% { transform: scaleY(.8) scaleX(1.12); } 60% { transform: scaleY(1.05) scaleX(.96); } }
+.coconut { position: absolute; left: 50%; top: -6px; font-size: 34px; z-index: 3; animation: coconut 1.4s ease-in forwards; }
+@keyframes coconut { 0% { transform: translate(-50%, -160px) rotate(0); } 25% { transform: translate(-50%, 0) rotate(180deg); } 45% { transform: translate(10px, -40px) rotate(260deg); } 100% { transform: translate(60px, 60px) rotate(400deg); opacity: 0; } }
+.bonkstars { position: absolute; left: 50%; top: 0; font-size: 26px; transform: translateX(-50%); opacity: 0; animation: bonkstars 1.6s .35s; z-index: 3; }
+@keyframes bonkstars { 0% { opacity: 1; transform: translateX(-50%) rotate(0) scale(.6); } 80% { opacity: 1; transform: translateX(-50%) rotate(360deg) scale(1.2); } 100% { opacity: 0; } }
+.tear { animation: tear 1.2s ease-in infinite; } @keyframes tear { from { transform: translateY(0); opacity: 1; } to { transform: translateY(18px); opacity: 0; } }
+.record { font-size: 30px; font-weight: 800; background: var(--sun); border-radius: 30px; padding: 4px 18px; box-shadow: var(--shadow); }
+.record.new { animation: pop .6s 3; background: linear-gradient(90deg, #ffc93c, #ff8a00); color: #fff; }
+.zone .best { font-size: 15px; background: rgba(0,0,0,.18); border-radius: 10px; padding: 0 8px; margin-top: 2px; }

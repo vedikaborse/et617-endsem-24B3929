@@ -57,6 +57,7 @@ export function MapScreen() {
                 <span className="emo">{z.emo}</span>
                 {z.mr && <span className="badge-l" lang="mr">{z.mr}</span>}
                 <span className="stars">{m.games[z.id] ? '⭐'.repeat(Math.min(3, m.games[z.id].best)) : '☆☆☆'}</span>
+                {m.best && m.best[z.id] != null && <span className="best">👑 {m.best[z.id]}</span>}
               </button>
             ))}
           </div>
