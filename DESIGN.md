@@ -129,3 +129,6 @@ Pre/post 10-item letter test and 8-item matra test built from the in-app games; 
 
 ## 13. Iteration 2 (after review): voice + visuals, no reading
 The child cannot read Hindi either, so C2 is met through **spoken** Hindi. A flying hero guide speaks every instruction, an animated demo hand shows tap/drag actions, child screens carry icons and Marathi content only, and every zone has a light animated themed scene (jungle, mountain, village, field, river, fair, treasure island, cave).
+
+## 14. Iteration 3: coconut bonk and session high scores
+Wrong answer → a coconut lands on the hero's head (bonk + sad face + wah-wah sound), followed straight away by a spoken hint. It is aimed at the mascot, never the child. Session high scores (📅🏆 today, 👑 all-time) are shown on the reward screen and the map, with a session table in the Teacher panel. All data is in localStorage only (`src/lib/model.js`).

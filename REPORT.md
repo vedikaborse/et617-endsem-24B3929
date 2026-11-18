@@ -90,6 +90,16 @@ Feedback from reviewing the persona: Arjun cannot read Marathi, **and he cannot 
 
 ![v2 home](docs/screenshots/08-v2-home-demo-hand.jpg) ![v2 letter](docs/screenshots/09-v2-letter-jungle-hero-guide.jpg) ![v2 compare](docs/screenshots/10-v2-compare-card.jpg)
 
+### Design iteration 3: wrong-answer reaction and high scores
+- **Wrong answer:** a coconut 🥥 drops on the **hero's** head (not the child's) with a cartoon "bonk" and a "wah-wah" sound. The hero looks sad with a tear, then the spoken Hindi hint follows straight away. The reaction is slapstick and aimed at the mascot, so a mistake reads as funny, not shameful. There are still no lives lost and no score penalty.
+- **High scores per learning session:** a *session* is one child's turn on the shared tablet. It starts when the app opens, or when the teacher presses "Reset learner". Each finished round records a score (first-try correct answers). The reward screen shows 📅🏆 *today's best* and 👑 *all-time best on this device*, and celebrates 🆕 when either is beaten (the hero says "नया रिकॉर्ड!"). The map shows 👑 best per zone. The Teacher panel lists the last 10 sessions: start time, minutes, answers, accuracy, stars and best score per game.
+
+![v3 reward](docs/screenshots/11-v3-reward-high-score.jpg)
+
+### Where progress data is stored, and why
+All learner data lives **only in the tablet browser's `localStorage`** (key `aksharveer_v1`, code in `src/lib/model.js`). There is no server, no login and no names. It holds: answer log (target, chosen, error type, response time), look-alike and matra error counts, current level and streaks, adaptation decisions, speech judgements, sessions and high scores. Logs are capped (300 answers, 20 sessions).
+It is **needed**, but only locally: (1) the adaptive rules R1–R5 need performance history; (2) the P2 judge needs *visual evidence* (past taps) to tell a learning error from pronunciation variation; (3) the D8 evaluation plan needs accuracy, attempts, hints and time logs; (4) high scores and stars motivate the learner. A cloud database is **not** required by the exam, and leaving it out suits L2: shared devices, no personal data, works offline. The trade-off is that data stays on one device and is cleared with the browser data or by "Reset learner".
+
 ## D5 — Two contrasting learner scenarios (run on the live app)
 
 Started from the Teacher panel ("Run Scenario A/B"), which resets the learner and opens Game 2 with the scripted items from D3.

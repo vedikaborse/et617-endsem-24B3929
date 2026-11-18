@@ -16,6 +16,9 @@ React 18 + Vite, static, on Vercel. Hash routing (`src/main.jsx`). One dataset `
 ## Why is there almost no text?
 The persona cannot read Marathi or Hindi. So C2 (learner's own language) is delivered as *spoken* Hindi: the flying hero says every instruction, the demo hand shows the action, and feedback is the hero's reaction plus voice. On-screen writing is only the Marathi being learned.
 
+## Where is progress data stored? Is it required?
+Only in the tablet's localStorage (`src/lib/model.js`, key `aksharveer_v1`), with no server and no names. It is needed for adaptation (R1–R5), for the P2 judge's visual evidence, for the D8 log data and for high scores. A cloud database is not required, and leaving it out fits shared tablets, privacy and offline use.
+
 ## Likely questions
 1. **Why Hindi instructions for a Marathi app?** C2 says the learner's own language. Arjun speaks Hindi at home and cannot follow Marathi instructions, so the task explanation must be in Hindi or he learns nothing. Marathi is the content, Hindi the scaffold, and both share the Devanagari script.
 2. **How is C2 visible?** Every child-facing instruction, hint, feedback and reward is short spoken Hindi, and it is also spoken aloud. English appears only on the About and Teacher screens.
